@@ -8,7 +8,7 @@ library(scales)
 library(RColorBrewer)
 library(showtext) 
   
-#font_add_google("Michroma", "michroma")  # Or replace with "michroma" or another preferred font
+font_add_google("Michroma", "michroma")  # Or replace with "michroma" or another preferred font
 showtext_auto()  # Enable showtext for rendering
 
 
