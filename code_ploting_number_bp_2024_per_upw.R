@@ -7,7 +7,7 @@ library(patchwork)
 library(scales)
 library(RColorBrewer)
 library(showtext) 
-
+  
 #font_add_google("Michroma", "michroma")  # Or replace with "michroma" or another preferred font
 showtext_auto()  # Enable showtext for rendering
 
@@ -26,8 +26,11 @@ data_shp_bp <- data_shp %>%
 
 
 # Create custom breaks for the color scale
-breaks <- classIntervals(data_shp_bp$nb_bp, 
-                         n = 5, style = "pretty")
+# Use the same breaks for both
+breaks <- classIntervals(data_shp_bp$nb_bp, n = 5, style = "pretty")
+
+# Create consistent color palette to hget the same colors as the map for the table 
+colors <- RColorBrewer::brewer.pal(n = length(breaks$brks)-1, name = "YlOrBr")
 
 text_scale <- 300 / 96  # Adjust based on screen DPI (typically 96)
 
@@ -56,9 +59,8 @@ table_data <- data_shp_bp %>%
     rank = row_number(),
     display_name = Area,
     relative_importance = Value / max(Value, na.rm = TRUE),
-    bar_color = colorRampPalette(RColorBrewer::brewer.pal(9, "YlOrBr"))(100)[
-      as.numeric(cut(Value, breaks = 100, include.lowest = TRUE))
-    ]
+    color_bin = cut(Value, breaks = breaks$brks, include.lowest = TRUE),
+    bar_color = colors[as.numeric(color_bin)]
   )
 
 # Create enhanced table with horizontal bars
@@ -94,5 +96,5 @@ final_plot <- main_map + table_plot +
     )
   )
 
-ggsave("bureau_de_poste_par_wilaya.png", final_plot, 
+ggsave("20250611_bureau_de_poste_par_wilaya.png", final_plot, 
        width = 15, height = 10, dpi = 300, device = ragg::agg_png, bg = "transparent")
