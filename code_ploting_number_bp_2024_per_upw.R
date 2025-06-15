@@ -8,7 +8,10 @@ library(scales)
 library(RColorBrewer)
 library(showtext) 
   
-font_add_google("Michroma", "michroma")  # Or replace with "michroma" or another preferred font
+font_add(family = "Eurostile LT Std", 
+         regular = "eurostile/Eurostile_EurostileLTStd.ttf", 
+         bold = "eurostile/Eurostile_EurostileLTStd-Bold.ttf")
+
 showtext_auto()  # Enable showtext for rendering
 
 
@@ -30,14 +33,14 @@ data_shp_bp <- data_shp %>%
 breaks <- classIntervals(data_shp_bp$nb_bp, n = 5, style = "pretty")
 
 # Create consistent color palette to hget the same colors as the map for the table 
-colors <- RColorBrewer::brewer.pal(n = length(breaks$brks)-1, name = "YlOrBr")
+colors <- RColorBrewer::brewer.pal(n = length(breaks$brks)-1, name = "PuBu")
 
 text_scale <- 300 / 96  # Adjust based on screen DPI (typically 96)
 
 # Create the main map
 main_map <- ggplot(data_shp_bp) +
   geom_sf(aes(fill = nb_bp), color = "white", size = 0.3) +
-  scale_fill_distiller(palette = "YlOrBr", 
+  scale_fill_distiller(palette = "PuBu", 
                        direction = 1,
                        name = "nb_bp",
                        breaks = breaks$brks,
@@ -68,16 +71,16 @@ table_plot <- ggplot(table_data, aes(y = reorder(display_name, Value))) +
   geom_col(aes(x = relative_importance), 
            fill = table_data$bar_color, width = 0.5) +
   geom_text(aes(x = -0.02, label = display_name), 
-            hjust = 1, vjust = 0.5, size = 3 * text_scale, color = "black", family = "michroma") +
+            hjust = 1, vjust = 0.5, size = 3 * text_scale, color = "black", family = "Eurostile LT Std") +
   geom_text(aes(x = relative_importance + 0.02, label = Value_display), 
             hjust = 0, vjust = 0.5, size = 3 * text_scale, color = "black", 
-            fontface = "bold", family = "michroma") +
+            fontface = "bold", family = "Eurostile LT Std") +
   scale_x_continuous(limits = c(-0.35, 1.15), expand = c(0, 0)) +
   scale_y_discrete(expand = c(0.05, 0.05)) +  # Increased vertical expansion for more space
   theme_void() +
   theme(
     plot.margin = margin(t = 0, r = 5, b = 0, l = 5),  # Reduced top margin to extend upward
-    text = element_text(family = "michroma", size = 10 * text_scale)
+    text = element_text(family = "Eurostile LT Std", size = 10 * text_scale)
   )
 
 
@@ -88,13 +91,13 @@ final_plot <- main_map + table_plot +
     title = "Nombre de bureaux de poste existants par Wilaya",
     subtitle = "Données au 31/12/2024",
     theme = theme(
-      plot.title = element_text(family = "michroma", size = 25 * text_scale, face = "bold", hjust = 0, 
+      plot.title = element_text(family = "Eurostile LT Std", size = 25 * text_scale, face = "bold", hjust = 0, 
                                 margin = margin(t = 2, b = 2)),
-      plot.subtitle = element_text(family = "michroma", size = 14 * text_scale, hjust = 0, color = "grey30",
+      plot.subtitle = element_text(family = "Eurostile LT Std", size = 14 * text_scale, hjust = 0, color = "grey30",
                                    margin = margin(b = 3)),
       plot.background = element_rect(fill = "white", color = NA)  # Set transparent background
     )
   )
 
-ggsave("20250611_bureau_de_poste_par_wilaya.png", final_plot, 
-       width = 15, height = 10, dpi = 300, device = ragg::agg_png, bg = "transparent")
+ggsave("20250615_bureau_de_poste_par_wilaya.png", final_plot, 
+       width = 18, height = 10, dpi = 300, device = ragg::agg_png, bg = "transparent")
