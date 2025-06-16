@@ -71,16 +71,16 @@ table_plot <- ggplot(table_data, aes(y = reorder(display_name, Value))) +
   geom_col(aes(x = relative_importance), 
            fill = table_data$bar_color, width = 0.5) +
   geom_text(aes(x = -0.02, label = display_name), 
-            hjust = 1, vjust = 0.5, size = 3 * text_scale, color = "black", family = "Eurostile LT Std") +
+            hjust = 1, vjust = 0.5, size = 2.1 * text_scale, color = "black", family = "Eurostile LT Std") +
   geom_text(aes(x = relative_importance + 0.02, label = Value_display), 
             hjust = 0, vjust = 0.5, size = 3 * text_scale, color = "black", 
-            fontface = "bold", family = "Eurostile LT Std") +
+             family = "Eurostile LT Std") +
   scale_x_continuous(limits = c(-0.35, 1.15), expand = c(0, 0)) +
   scale_y_discrete(expand = c(0.05, 0.05)) +  # Increased vertical expansion for more space
   theme_void() +
   theme(
     plot.margin = margin(t = 0, r = 5, b = 0, l = 5),  # Reduced top margin to extend upward
-    text = element_text(family = "Eurostile LT Std", size = 10 * text_scale)
+    text = element_text(family = "Eurostile LT Std", size = 5 )
   )
 
 
@@ -99,5 +99,6 @@ final_plot <- main_map + table_plot +
     )
   )
 
-ggsave("20250615_bureau_de_poste_par_wilaya.png", final_plot, 
-       width = 18, height = 10, dpi = 300, device = ragg::agg_png, bg = "transparent")
+ggsave("20250616_bureau_de_poste_par_wilaya.png", final_plot, 
+       width = 30, height = 21, dpi = 300, device = ragg::agg_png, 
+       bg = "transparent", units = "cm")
